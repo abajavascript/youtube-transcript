@@ -1,0 +1,23 @@
+yt-transcript.py
+  a97ea81170545722 12,77-84,124,226-228,230-232,234-304,317,327-328,330-331,367-372
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.16",
+  "base_commit_sha": "616bffa9b5562223bb37ed955c0b746db4d2ec71",
+  "prompts": {
+    "a97ea81170545722": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "6a15e3c8-014a-4737-a2a0-3852db521fb2",
+        "model": "default"
+      },
+      "human_author": "ABA JavaScript <abajavascript@gmail.com>",
+      "messages": [],
+      "total_additions": 100,
+      "total_deletions": 7,
+      "accepted_lines": 98,
+      "overriden_lines": 0
+    }
+  }
+}
