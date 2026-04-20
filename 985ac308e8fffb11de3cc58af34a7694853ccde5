@@ -1,0 +1,37 @@
+yt-transcript.py
+  baeaee97ce33667c 366-470,484-493
+  deebb9cda3467e4a 479
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.16",
+  "base_commit_sha": "985ac308e8fffb11de3cc58af34a7694853ccde5",
+  "prompts": {
+    "baeaee97ce33667c": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "ec13352f-2ee5-458c-b11f-9dbee65ebfbc",
+        "model": "default"
+      },
+      "human_author": "ABA JavaScript <abajavascript@gmail.com>",
+      "messages": [],
+      "total_additions": 151,
+      "total_deletions": 36,
+      "accepted_lines": 115,
+      "overriden_lines": 0
+    },
+    "deebb9cda3467e4a": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "1dad12d0-62b5-4ed1-8ed3-7061a6a9e27a",
+        "model": "default"
+      },
+      "human_author": "ABA JavaScript <abajavascript@gmail.com>",
+      "messages": [],
+      "total_additions": 517,
+      "total_deletions": 385,
+      "accepted_lines": 195,
+      "overriden_lines": 0
+    }
+  }
+}
