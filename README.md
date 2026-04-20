@@ -16,7 +16,7 @@ Transcripts are resolved through **yt-dlp** (metadata and captions when availabl
 | `yt-transcript.py` | CLI: one or more URLs → JSON on stdout |
 | `app.py` | FastAPI ASGI app: health + `/api/transcript` |
 | `requirements.txt` | Python dependencies (includes `uvicorn` for local serving) |
-| `vercel.json` | Vercel function settings (`maxDuration`, file excludes) |
+| `vercel.json` | Optional Vercel project JSON (schema only; see deploy notes for duration) |
 
 ## Local setup
 
@@ -76,7 +76,7 @@ python -m uvicorn app:app --reload --host 127.0.0.1 --port 8010
 
 1. **Repository** — Push this project to GitHub, GitLab, or Bitbucket (or connect a local directory with the Vercel CLI).
 2. **New project** — In the [Vercel dashboard](https://vercel.com/dashboard), import the repository as a new project.
-3. **Runtime** — Vercel will detect Python from `requirements.txt` and use [`vercel.json`](vercel.json) for function configuration (for example **`maxDuration`: 60** seconds for `app.py`). Increase `maxDuration` in `vercel.json` if transcript fetches time out, within your plan’s limits.
+3. **Runtime** — Vercel will detect Python from `requirements.txt` and the root [`app.py`](app.py) FastAPI app. **Function duration** is not set in this repo’s `vercel.json` (patterns there only apply to `api/*` serverless files). In the Vercel dashboard, open **Project → Settings → Functions** and raise the **maximum duration** if transcript requests hit timeouts (within your plan’s limit).
 4. **Environment variables** (optional) — In the project **Settings → Environment Variables**, add `TRANSCRIPT_API_TOKEN` if you want bearer-token protection on `/api/transcript`.
 5. **Deploy** — Trigger a deployment; production URL will be shown in the dashboard.
 

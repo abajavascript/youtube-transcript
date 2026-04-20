@@ -9,7 +9,7 @@ header ``Authorization: Bearer <token>`` for /api/transcript.
 
 Response shape matches the CLI: ``{"videos": [<TranscriptResult as dict>]}``.
 
-Vercel: increase ``maxDuration`` in vercel.json if requests time out (plan tier caps apply).
+Vercel: set function max duration in the project dashboard (Settings → Functions) if requests time out (plan tier caps apply).
 """
 
 from __future__ import annotations
