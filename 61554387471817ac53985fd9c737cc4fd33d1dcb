@@ -1,0 +1,21 @@
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.16",
+  "base_commit_sha": "61554387471817ac53985fd9c737cc4fd33d1dcb",
+  "prompts": {
+    "deebb9cda3467e4a": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "1dad12d0-62b5-4ed1-8ed3-7061a6a9e27a",
+        "model": "default"
+      },
+      "human_author": "ABA JavaScript <abajavascript@gmail.com>",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 132,
+      "overriden_lines": 0
+    }
+  }
+}
