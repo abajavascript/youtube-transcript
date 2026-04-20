@@ -1,0 +1,57 @@
+app.py
+  b34d1ffebec0ad26 19,38-39
+  31545e1513d92a3d 1-18,20-37,40-101
+vercel.json
+  31545e1513d92a3d 1-9
+README.md
+  b34d1ffebec0ad26 1-97
+requirements.txt
+  31545e1513d92a3d 1,3-4
+  b34d1ffebec0ad26 2
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.16",
+  "base_commit_sha": "dc3228f73c27df4fdd9a8d059739b9bf453a21ac",
+  "prompts": {
+    "31545e1513d92a3d": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "7068a98c-f8b1-435c-9192-22da7d0d7d31",
+        "model": "default"
+      },
+      "human_author": "ABA JavaScript <abajavascript@gmail.com>",
+      "messages": [],
+      "total_additions": 119,
+      "total_deletions": 9,
+      "accepted_lines": 110,
+      "overriden_lines": 0
+    },
+    "b34d1ffebec0ad26": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "d8ac20ab-f47b-414f-afce-9ca19d45992e",
+        "model": "default"
+      },
+      "human_author": "ABA JavaScript <abajavascript@gmail.com>",
+      "messages": [],
+      "total_additions": 101,
+      "total_deletions": 0,
+      "accepted_lines": 101,
+      "overriden_lines": 0
+    },
+    "deebb9cda3467e4a": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "1dad12d0-62b5-4ed1-8ed3-7061a6a9e27a",
+        "model": "default"
+      },
+      "human_author": "ABA JavaScript <abajavascript@gmail.com>",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 132,
+      "overriden_lines": 0
+    }
+  }
+}
