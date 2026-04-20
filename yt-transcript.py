@@ -363,6 +363,111 @@ def process_url(video_url: str) -> TranscriptResult:
     return result
 
 
+def transcript_text_for_clipboard(raw: str | None) -> str:
+    """Turn stored transcript into paste-friendly text (real newlines, not literal \\n)."""
+    if not raw:
+        return ''
+    text = raw.replace('\\r\\n', '\n').replace('\\n', '\n')
+    return text
+
+
+def _win32_clipboard_ctypes(text: str) -> bool:
+    """Set CF_UNICODETEXT via Win32 API; ctypes must use wide handles or 64-bit GlobalAlloc fails."""
+    import ctypes
+    from ctypes import wintypes
+
+    user32 = ctypes.WinDLL('user32', use_last_error=True)
+    kernel32 = ctypes.WinDLL('kernel32', use_last_error=True)
+
+    GMEM_MOVEABLE = 0x0002
+    CF_UNICODETEXT = 13
+
+    kernel32.GlobalAlloc.argtypes = (wintypes.UINT, ctypes.c_size_t)
+    kernel32.GlobalAlloc.restype = wintypes.HGLOBAL
+    kernel32.GlobalLock.argtypes = (wintypes.HGLOBAL,)
+    kernel32.GlobalLock.restype = wintypes.LPVOID
+    kernel32.GlobalUnlock.argtypes = (wintypes.HGLOBAL,)
+    kernel32.GlobalFree.argtypes = (wintypes.HGLOBAL,)
+
+    user32.OpenClipboard.argtypes = (wintypes.HWND,)
+    user32.OpenClipboard.restype = wintypes.BOOL
+    user32.CloseClipboard.restype = wintypes.BOOL
+    user32.EmptyClipboard.restype = wintypes.BOOL
+    user32.SetClipboardData.argtypes = (wintypes.UINT, wintypes.HANDLE)
+    user32.SetClipboardData.restype = wintypes.HANDLE
+
+    blob = (text + '\0').encode('utf-16-le', errors='surrogatepass')
+    size = len(blob)
+
+    if not user32.OpenClipboard(None):
+        return False
+    try:
+        if not user32.EmptyClipboard():
+            return False
+        h_global = kernel32.GlobalAlloc(GMEM_MOVEABLE, size)
+        if not h_global:
+            return False
+        p_locked = kernel32.GlobalLock(h_global)
+        if not p_locked:
+            kernel32.GlobalFree(h_global)
+            return False
+        try:
+            ctypes.memmove(p_locked, blob, size)
+        finally:
+            kernel32.GlobalUnlock(h_global)
+        if not user32.SetClipboardData(CF_UNICODETEXT, h_global):
+            kernel32.GlobalFree(h_global)
+            return False
+    finally:
+        user32.CloseClipboard()
+    return True
+
+
+def _win32_clipboard_clip_exe(text: str) -> bool:
+    """Fallback: Windows system32 clip.exe (UTF-16 LE + BOM)."""
+    import codecs
+    import os
+    import subprocess
+
+    clip = os.path.join(os.environ.get('SystemRoot', r'C:\Windows'), 'System32', 'clip.exe')
+    if not os.path.isfile(clip):
+        return False
+    try:
+        data = codecs.BOM_UTF16_LE + text.encode('utf-16-le', errors='surrogatepass')
+        completed = subprocess.run(
+            [clip],
+            input=data,
+            capture_output=True,
+            timeout=60,
+            check=False,
+        )
+        return completed.returncode == 0
+    except Exception:
+        return False
+
+
+def copy_text_to_clipboard(text: str) -> bool:
+    """Copy text to the system clipboard (Windows: Win32 + clip.exe fallback; macOS: pbcopy)."""
+    if not text:
+        return False
+    if sys.platform == 'win32':
+        try:
+            if _win32_clipboard_ctypes(text):
+                return True
+        except Exception:
+            pass
+        return _win32_clipboard_clip_exe(text)
+    try:
+        import subprocess
+
+        if sys.platform == 'darwin':
+            subprocess.run(['pbcopy'], input=text.encode('utf-8'), check=False)
+            return True
+    except Exception:
+        pass
+    return False
+
+
 def main(argv: list[str]) -> int:
     if hasattr(sys.stdout, 'reconfigure'):
         try:
@@ -371,11 +476,21 @@ def main(argv: list[str]) -> int:
             pass
 
     if len(argv) < 2:
-        print(json.dumps({'error': 'usage: fetch_youtube_transcript.py <url1> <url2> ...'}))
+        print(json.dumps({'error': 'usage: yt-transcript.py <url1> <url2> ...'}))
         return 1
 
     results = [asdict(process_url(url)) for url in argv[1:]]
     print(json.dumps({'videos': results}, ensure_ascii=False, indent=2))
+
+    clipboard_parts: list[str] = []
+    for item in results:
+        t = transcript_text_for_clipboard(item.get('transcript'))
+        if t:
+            clipboard_parts.append(t)
+    clipboard_body = '\n\n'.join(clipboard_parts).strip()
+    if clipboard_body and not copy_text_to_clipboard(clipboard_body):
+        print('Warning: could not copy transcript to clipboard.', file=sys.stderr)
+
     return 0
 
 
